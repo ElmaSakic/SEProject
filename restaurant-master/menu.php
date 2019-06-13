@@ -378,10 +378,10 @@
                 <img class="img-fluid" src="images/clock.jpg" alt="clock" width="200" height="150" style="border-radius:20%;" />
             </div>
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 col-xl-4">
-                <input type="date" class="form-control my-5" style=" max-width:300px;" />
+                <input type="date" id="dateVisit" name="dateVisit" class="form-control my-5" style=" max-width:300px;" />
             </div>
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 col-xl-4">
-                <input type="time" class="form-control  my-5" style="margin-left:-50px;max-width:300px;" />
+                <input type="time" id="timeVisit" name="timeVisit" class="form-control  my-5" style="margin-left:-50px;max-width:300px;" />
             </div>
         </div><br />
         <div class="row no-gutters">
@@ -408,10 +408,10 @@
                 </select>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 col-xl-4">
-                <input type="number" placeholder="Kolicina" class="form-control" style="margin-left:-50px;max-width:300px;" />
+                <input type="number" id="foodQuantity" name="foodQuantity"  placeholder="Kolicina" class="form-control" style="margin-left:-50px;max-width:300px;" />
             </div>
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 col-xl-4 offset-xl-6">
-                <input type="text" class="form-control" style="max-width:300px; margin-top:-50px;" readonly placeholder="Price" />
+                <input type="text" class="form-control" id="foodPrice" name="foodPrice" style="max-width:300px; margin-top:-50px;" readonly placeholder="Price" />
             </div>
         </div><br />
         <div class="row no-gutters">
@@ -438,13 +438,81 @@
                 </select>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 col-xl-4">
-                <input type="number" placeholder="Kolicina" class="form-control" style="margin-left:-50px;max-width:300px;" />
+                <input type="number" id="drinkQuantity" name="drinkQuantity" placeholder="Kolicina" class="form-control" style="margin-left:-50px;max-width:300px;" />
             </div>
             <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 col-xl-4 offset-xl-6">
-                <input type="text" class="form-control" style="max-width:300px; margin-top:-50px;" readonly placeholder="Price" />
+                <input type="text" class="form-control" id="drinkPrice" name="drinkPrice" style="max-width:300px; margin-top:-50px;" readonly placeholder="Price" />
             </div>
         </div><br />
     </section>
+	
+
+    <script>
+		$("#poruka").slideUp();
+		$("#unesi").click(function(){
+			$("#poruka").removeClass('alert-success').removeClass('alert-danger');	
+			var dateVisit = $("#dateVisit").val();
+			var timeVisit = $("#timeVisit").val();
+			var foodNum = $("#food").val();
+			var foodQuantity = $("#foodQuantity").val();
+			var foodPrice = $("#foodPrice").val();
+			var drinkNum = $("#drink").val();
+			var drinkQuantity = $("#drinkQuantity").val();
+			var drinkPrice = $("#drinkPrice").val();
+			var fullName = $("#fullName").val();
+
+			if (dateVisit  == ""){
+				$("#poruka").addClass('alert-danger');
+				$("#poruka").html('<strong>Error</strong> Please enter date visit.');
+				$("#poruka").slideDown(500).delay(1000).slideUp(500);
+			}else if(timeVisit == ""){
+				$("#poruka").addClass('alert-danger');
+				$("#poruka").html('<strong>Error</strong> Please enter time visit.');
+				$("#poruka").slideDown(500).delay(1000).slideUp(500);
+			}else if(foodNum == ""){
+				$("#poruka").addClass('alert-danger');
+				$("#poruka").html('<strong>Error</strong> Please choose food.');
+				$("#poruka").slideDown(500).delay(1000).slideUp(500);
+			}else if(foodQuantity == ""){
+				$("#poruka").addClass('alert-danger');
+				$("#poruka").html('<strong>Error</strong> Please enter quantity.');
+				$("#poruka").slideDown(500).delay(1000).slideUp(500);
+			}else if(drinkNum == ""){
+				$("#poruka").addClass('alert-danger');
+				$("#poruka").html('<strong>Error</strong> Please choose drink.');
+				$("#poruka").slideDown(500).delay(1000).slideUp(500);
+			}else if(drinkQuantity == ""){
+				$("#poruka").addClass('alert-danger');
+				$("#poruka").html('<strong>Error</strong> Please enter drink Quantity.');
+				$("#poruka").slideDown(500).delay(1000).slideUp(500);
+			}else if(fullName == ""){
+				$("#poruka").addClass('alert-danger');
+				$("#poruka").html('<strong>Error</strong> Please enter your name.');
+				$("#poruka").slideDown(500).delay(1000).slideUp(500);
+			}else{
+				$.ajax({
+			
+					url: "./dataMenu.php?task=serve&dateVisit="+dateVisit+"&timeVisit="+timeVisit+"&foodNum="+foodNum+"&foodQuantity="+foodQuantity+"&foodPrice="+foodPrice+"&drinkNum="+drinkNum+"&drinkQuantity="+drinkQuantity+"&drinkPrice="+drinkPrice+"&fullName="+fullName,
+                    success: function (data) {
+						if(data == 'SERVE'){
+							$("#poruka").addClass('alert-success');
+							$("#poruka").html('<strong>'+data+'</strong> Serve finished.');
+							$("#poruka").slideDown(500).delay(1000).slideUp(500);
+						}else{
+							$("#poruka").addClass('alert-danger');
+							$("#poruka").html('<strong>Error</strong>Please try again.');
+							$("#poruka").slideDown(500).delay(1000).slideUp(500);
+						}
+                    },
+                    error: function (data, err) {
+							$("#poruka").addClass('alert-danger');
+							$("#poruka").html('<strong>Problem occured</strong> Please try later.');
+							$("#poruka").slideDown(500).delay(1000).slideUp(500);
+					}
+				});
+			}
+		});
+	</script>
 
 
     <section id="card">
@@ -455,9 +523,6 @@
                 </div>
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 col-xl-4 my-5">
                     <input type="text" class="form-control" style="max-width:300px;" placeholder="Enter your name..." />
-                </div>
-                <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 col-xl-4 my-5">
-                    <input type="number" class="form-control" style="max-width:300px;" placeholder="Credit card number..." />
                 </div>
                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-2 col-xl-4 offset-xl-6">
                     <input type="button" class="btn btn-outline-info btn-lg" id="submit" style="color:white; border:white solid 1px;" value="Submit" />
